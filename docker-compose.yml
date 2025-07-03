@@ -31,7 +31,7 @@ services:
       WORDPRESS_SITE_URL: ${WORDPRESS_SITE_URL} # Define your site URL
     volumes:
       - ./wordpress:/var/www/html # Mount WordPress files to a local directory
-      - ./install-plugins.sh:/var/www/html
+      - ./install-plugins.sh:/var/www/html/install-plugins.sh
       - ./uploads.ini:/usr/local/etc/php/conf.d/uploads.ini # Mount custom PHP config
     depends_on:
       - db
