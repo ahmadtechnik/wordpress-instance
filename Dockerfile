@@ -1,27 +1,28 @@
-# Dockerfile for custom WordPress setup
-#
-# This file starts with the official WordPress image, which already includes wp-cli.
-# It then copies and runs a script to install and activate a list of plugins.
-
+# Start from official WordPress image
 FROM wordpress:latest
 
-# Update system and install WP-CLI
-RUN apt-get update && apt-get upgrade -y && \
+# Update system and install required tools
+RUN apt-get update && \
+    apt-get upgrade -y && \
     apt-get install -y less curl mariadb-client unzip && \
-    curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar && \
+    rm -rf /var/lib/apt/lists/*
+
+# Ensure wp-cli is present (usually already included)
+RUN curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar && \
     chmod +x wp-cli.phar && \
     mv wp-cli.phar /usr/local/bin/wp
 
-# Copy the plugin installation script into the container
-COPY ./install-plugins.sh /usr/local/bin/install-plugins.sh
+# Copy your script to the WordPress root directory
+COPY ./install-plugins.sh /var/www/html/install-plugins.sh
 
-# Make the script executable
-RUN chmod +x /usr/local/bin/install-plugins.sh
+# Set correct permissions for www-data
+RUN chmod +x /var/www/html/install-plugins.sh && \
+    chown www-data:www-data /var/www/html/install-plugins.sh
 
-RUN mkdir "/docker-entrypoint-initwp.d/"
+# Run the script during build (optional)
+# If you want to run it at build time (make sure WP is initialized):
+# USER www-data
+# RUN wp plugin install akismet --activate
 
-# The original entrypoint will be executed, and we can add our script
-# to the initialization directory to have it run on first start.
-# This is a robust way to ensure plugins are installed after WordPress is ready.
-RUN mv /usr/local/bin/install-plugins.sh /docker-entrypoint-initwp.d/install-plugins.sh
-
+# Optional: switch to www-data for runtime consistency
+USER www-data
