@@ -18,3 +18,5 @@ COPY ./install-plugins.sh /var/www/html/install-plugins.sh
 # Set correct permissions for www-data
 RUN chmod +x /var/www/html/install-plugins.sh && \
     chown www-data:www-data /var/www/html/install-plugins.sh
+
+USER www-data
