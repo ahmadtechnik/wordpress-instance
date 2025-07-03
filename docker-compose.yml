@@ -1,13 +1,11 @@
 # Docker Compose file for WordPress with File Browser, phpMyAdmin, and Plugin Installer
 #
-# This file now uses a .env file, an init script for plugins, and includes phpMyAdmin.
+# This stack now builds a custom WordPress image using a Dockerfile.
 #
 # To run this:
-# 1. Save this file as 'docker-compose.yml'.
-# 2. Create/update the '.env' file with your credentials and site URL.
-# 3. Create the 'uploads.ini' file for upload limits.
-# 4. Create the 'init-plugins.sh' script and make it executable (`chmod +x init-plugins.sh`).
-# 5. Run 'docker-compose up -d' in your terminal.
+# 1. Save all files: 'docker-compose.yml', 'Dockerfile', 'install-plugins.sh', 'uploads.ini', '.env'.
+# 2. Make the script executable: `chmod +x install-plugins.sh`.
+# 3. Run 'docker-compose up -d --build' in your terminal.
 #
 # Access WordPress at: The URL you set in WORDPRESS_SITE_URL (e.g., http://localhost:8080)
 # Access File Browser at: http://localhost:8081 (Default user/pass: admin/admin)
@@ -16,9 +14,11 @@
 version: '3.8'
 
 services:
-  # WordPress Service
+  # WordPress Service (built from Dockerfile)
   wordpress:
-    image: wordpress:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
     container_name: wordpress_app
     restart: always
     ports:
@@ -32,7 +32,6 @@ services:
     volumes:
       - ./wordpress:/var/www/html # Mount WordPress files to a local directory
       - ./uploads.ini:/usr/local/etc/php/conf.d/uploads.ini # Mount custom PHP config
-      - ./init-plugins.sh:/docker-entrypoint-initwp.d/init-plugins.sh # Script to install plugins
     depends_on:
       - db
 
