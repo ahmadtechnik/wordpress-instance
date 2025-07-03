@@ -1,0 +1,51 @@
+version: '3.8'
+
+services:
+  # WordPress Service
+  wordpress:
+    image: wordpress:latest
+    container_name: wordpress_app
+    restart: always
+    ports:
+      - "8080:80" # Map host port 8080 to container port 80
+    environment:
+      WORDPRESS_DB_HOST: db
+      WORDPRESS_DB_USER: ${WORDPRESS_DB_USER}
+      WORDPRESS_DB_PASSWORD: ${WORDPRESS_DB_PASSWORD}
+      WORDPRESS_DB_NAME: ${WORDPRESS_DB_NAME}
+    volumes:
+      - ./wordpress:/var/www/html
+      - ./uploads.ini:/usr/local/etc/php/conf.d/uploads.ini
+      - ./init-plugins.sh:/docker-entrypoint-initwp.d/init-plugins.sh
+    depends_on:
+      - db
+
+  # MariaDB Database Service
+  db:
+    image: mariadb:latest
+    container_name: wordpress_db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${WORDPRESS_DB_NAME}
+      MYSQL_USER: ${WORDPRESS_DB_USER}
+      MYSQL_PASSWORD: ${WORDPRESS_DB_PASSWORD}
+    volumes:
+      - ./db_data:/var/lib/mysql # Persist database data
+
+  # File Browser Service (Web-based File Manager)
+  filebrowser:
+    image: filebrowser/filebrowser:latest
+    container_name: wordpress_file_manager
+    restart: always
+    ports:
+      - "8081:80" # Map host port 8081 to container port 80
+    volumes:
+      - ./wordpress:/srv # Mount the same WordPress directory to be managed
+      - ./filebrowser.db:/database.db # Persist File Browser's database
+    user: "root" # Run as root to have permission to manage WordPress files
+
+volumes:
+  db_data:
+  wordpress:
+
