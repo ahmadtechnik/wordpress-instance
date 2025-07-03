@@ -8,10 +8,15 @@ set -e
 
 # --- Customize your plugins here ---
 # Add the slugs of the plugins you want to install.
+# Define list of plugins to install
 PLUGINS_TO_INSTALL=(
-    "elementor"
     "contact-form-7"
-    "yoast"
+    "woocommerce"
+    "members"
+    "admin-menu-editor"       # Admin menu enhancement
+    "file-manager-advanced"   # File manager plugin
+    "jetpack"
+    "seo-by-rank-math"        # Rank Math SEO
     "wordfence"
     "wp-mail-smtp"
 )
