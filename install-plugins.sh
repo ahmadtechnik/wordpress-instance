@@ -8,9 +8,6 @@ set -e
 
 # --- Customize your plugins here ---
 # Add the slugs of the plugins you want to install.
-# You can find the slug in the URL of the plugin on wordpress.org.
-# For example, for "Yoast SEO", the URL is https://wordpress.org/plugins/wordpress-seo/,
-# but the slug is just "yoast". A quick search usually finds the correct slug.
 PLUGINS_TO_INSTALL=(
     "elementor"
     "contact-form-7"
@@ -22,8 +19,7 @@ PLUGINS_TO_INSTALL=(
 
 echo "Starting plugin installation process..."
 
-# The official WordPress entrypoint script waits for the database to be ready,
-# so we can proceed directly with wp-cli commands.
+# The official WordPress entrypoint script waits for the database to be ready.
 for plugin in "${PLUGINS_TO_INSTALL[@]}"; do
     if ! wp plugin is-installed "$plugin" --allow-root; then
         echo "Installing and activating plugin: $plugin"

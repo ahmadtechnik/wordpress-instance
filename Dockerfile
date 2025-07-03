@@ -11,4 +11,8 @@ COPY ./install-plugins.sh /usr/local/bin/install-plugins.sh
 # Make the script executable
 RUN chmod +x /usr/local/bin/install-plugins.sh
 
-RUN /usr/local/bin/install-plugins.sh
+# The original entrypoint will be executed, and we can add our script
+# to the initialization directory to have it run on first start.
+# This is a robust way to ensure plugins are installed after WordPress is ready.
+RUN mv /usr/local/bin/install-plugins.sh /docker-entrypoint-initwp.d/install-plugins.sh
+
