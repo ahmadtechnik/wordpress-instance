@@ -73,8 +73,3 @@ services:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD} # Provide root password for full access
     depends_on:
       - db
-
-volumes:
-  db_data:
-  wordpress:
-
