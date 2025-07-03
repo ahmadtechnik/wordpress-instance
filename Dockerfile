@@ -6,7 +6,7 @@
 FROM wordpress:latest
 
 # Copy the plugin installation script into the container
-COPY install-plugins.sh /usr/local/bin/install-plugins.sh
+COPY ./install-plugins.sh /usr/local/bin/install-plugins.sh
 
 # Make the script executable
 RUN chmod +x /usr/local/bin/install-plugins.sh
