@@ -31,7 +31,7 @@ services:
       WORDPRESS_SITE_URL: ${WORDPRESS_SITE_URL}
     volumes:
       - ./wordpress:/var/www/html
-      - ./uploads.ini:/usr/local/etc/php/conf.d/uploads.ini
+      - ./upload.ini:/usr/local/etc/php/conf.d/uploads.ini
       - ./install-plugins.sh:/var/www/html/install-plugins.sh
     depends_on:
       - db
