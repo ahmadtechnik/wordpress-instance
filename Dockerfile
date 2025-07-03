@@ -5,6 +5,13 @@
 
 FROM wordpress:latest
 
+# Update system and install WP-CLI
+RUN apt-get update && apt-get upgrade -y && \
+    apt-get install -y less curl mariadb-client unzip && \
+    curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar && \
+    chmod +x wp-cli.phar && \
+    mv wp-cli.phar /usr/local/bin/wp
+
 # Copy the plugin installation script into the container
 COPY ./install-plugins.sh /usr/local/bin/install-plugins.sh
 
