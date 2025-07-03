@@ -18,11 +18,3 @@ COPY ./install-plugins.sh /var/www/html/install-plugins.sh
 # Set correct permissions for www-data
 RUN chmod +x /var/www/html/install-plugins.sh && \
     chown www-data:www-data /var/www/html/install-plugins.sh
-
-# Run the script during build (optional)
-# If you want to run it at build time (make sure WP is initialized):
-# USER www-data
-# RUN wp plugin install akismet --activate
-
-# Optional: switch to www-data for runtime consistency
-USER www-data
