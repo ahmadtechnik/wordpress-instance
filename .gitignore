@@ -1,2 +1,6 @@
 .env
 .env.local
+/wordpress
+/uploads.ini
+/db_data
+/filebrowser.db
