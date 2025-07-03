@@ -34,7 +34,7 @@ services:
       - ./install-plugins.sh:/var/www/html/install-plugins.sh
       - ./uploads.ini:/usr/local/etc/php/conf.d/uploads.ini # Mount custom PHP config
     depends_on:
-      - db
+      - ${WORDPRESS_INSTANCE_NAME}_db
 
   # MariaDB Database Service
   db:
