@@ -1,3 +1,18 @@
+# Docker Compose file for WordPress with File Browser, phpMyAdmin, and Plugin Installer
+#
+# This file now uses a .env file, an init script for plugins, and includes phpMyAdmin.
+#
+# To run this:
+# 1. Save this file as 'docker-compose.yml'.
+# 2. Create/update the '.env' file with your credentials and site URL.
+# 3. Create the 'uploads.ini' file for upload limits.
+# 4. Create the 'init-plugins.sh' script and make it executable (`chmod +x init-plugins.sh`).
+# 5. Run 'docker-compose up -d' in your terminal.
+#
+# Access WordPress at: The URL you set in WORDPRESS_SITE_URL (e.g., http://localhost:8080)
+# Access File Browser at: http://localhost:8081 (Default user/pass: admin/admin)
+# Access phpMyAdmin at: http://localhost:8082
+
 version: '3.8'
 
 services:
@@ -13,10 +28,11 @@ services:
       WORDPRESS_DB_USER: ${WORDPRESS_DB_USER}
       WORDPRESS_DB_PASSWORD: ${WORDPRESS_DB_PASSWORD}
       WORDPRESS_DB_NAME: ${WORDPRESS_DB_NAME}
+      WORDPRESS_SITE_URL: ${WORDPRESS_SITE_URL} # Define your site URL
     volumes:
-      - ./wordpress:/var/www/html
-      - ./uploads.ini:/usr/local/etc/php/conf.d/uploads.ini
-      - ./init-plugins.sh:/docker-entrypoint-initwp.d/init-plugins.sh
+      - ./wordpress:/var/www/html # Mount WordPress files to a local directory
+      - ./uploads.ini:/usr/local/etc/php/conf.d/uploads.ini # Mount custom PHP config
+      - ./init-plugins.sh:/docker-entrypoint-initwp.d/init-plugins.sh # Script to install plugins
     depends_on:
       - db
 
@@ -44,6 +60,19 @@ services:
       - ./wordpress:/srv # Mount the same WordPress directory to be managed
       - ./filebrowser.db:/database.db # Persist File Browser's database
     user: "root" # Run as root to have permission to manage WordPress files
+
+  # phpMyAdmin Service
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    container_name: wordpress_phpmyadmin
+    restart: always
+    ports:
+      - "8082:80" # Map host port 8082 to container port 80
+    environment:
+      PMA_HOST: db # Connect to the 'db' service
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD} # Provide root password for full access
+    depends_on:
+      - db
 
 volumes:
   db_data:
