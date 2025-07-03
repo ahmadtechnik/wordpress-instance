@@ -72,4 +72,4 @@ services:
       PMA_HOST: ${WORDPRESS_INSTANCE_NAME}_db # Connect to the 'db' service
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD} # Provide root password for full access
     depends_on:
-      - db
+      - ${WORDPRESS_INSTANCE_NAME}_db
